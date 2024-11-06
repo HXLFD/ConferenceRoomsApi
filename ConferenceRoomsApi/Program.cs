@@ -8,7 +8,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IConferenceRoomCommands, ConferenceRoomCommands>();
+builder.Services.AddSingleton<IConferenceRoomCommands, ConferenceRoomCommands>();
 
 var app = builder.Build();
 
