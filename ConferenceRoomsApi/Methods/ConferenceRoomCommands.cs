@@ -2,6 +2,9 @@
 using ConferenceRoomsApi.Models.Bookings;
 using ConferenceRoomsApi.Models.ConferenceRoom;
 using ConferenceRoomsApi.Models.Services;
+using Dapper;
+using Npgsql;
+using System.Collections.Generic;
 
 namespace ConferenceRoomsApi.Methods
 {
@@ -17,15 +20,11 @@ namespace ConferenceRoomsApi.Methods
 
             var services = new List<Service>
         {
-            new Service { Id = 1, Name = "Проектор", Price = 500 },
-            new Service { Id = 2, Name = "Wi-Fi", Price = 300 },
-            new Service { Id = 3, Name = "Звук", Price = 700 }
+            new Service { Id = 1, Name = "Проектор" },
+            new Service { Id = 2, Name = "Wi-Fi" },
+            new Service { Id = 3, Name = "Звук" }
         };
 
-            foreach (var room in _rooms)
-            {
-                room.Services.AddRange(services);
-            }
         }
 
 
@@ -53,7 +52,7 @@ namespace ConferenceRoomsApi.Methods
             existingRoom.Name = room.Name;
             existingRoom.Capacity = room.Capacity;
             existingRoom.BaseRentPerHour = room.BaseRentPerHour;
-            existingRoom.Services = room.Services;
+            existingRoom.RoomServices = room.RoomServices;
             return await Task.FromResult(true);
         }
 
@@ -87,14 +86,14 @@ namespace ConferenceRoomsApi.Methods
                 totalPrice *= 15 / 100;
             }
 
-            foreach (var serviceName in selectedServices)
-            {
-                var service = room.Services.FirstOrDefault(s => s.Name == serviceName);
-                if (service != null)
-                {
-                    totalPrice += service.Price;
-                }
-            }
+            //foreach (var serviceName in selectedServices)
+            //{
+            //    var service = room.Services.FirstOrDefault(s => s.Name == serviceName);
+            //    if (service != null)
+            //    {
+            //        totalPrice += service.Price;
+            //    }
+            //}
             var booking = new Booking
             {
                 Id = 0,
@@ -106,7 +105,5 @@ namespace ConferenceRoomsApi.Methods
             };
             return booking;
         }
-
-
     }
 }

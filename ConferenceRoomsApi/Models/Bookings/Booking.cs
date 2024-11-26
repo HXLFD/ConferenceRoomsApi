@@ -1,4 +1,5 @@
-﻿using ConferenceRoomsApi.Models.Services;
+﻿using ConferenceRoomsApi.Models.ConferenceRoom;
+using ConferenceRoomsApi.Models.Services;
 
 namespace ConferenceRoomsApi.Models.Bookings
 {
@@ -15,6 +16,8 @@ namespace ConferenceRoomsApi.Models.Bookings
         public List<string> SelectedServices { get; set; } = new List<string>(); // Имена выбранных услуг
 
         public decimal TotalCost { get; set; } // Общая стоимость бронирования
+
+        public Room Room { get; set; }
 
     }
 }
