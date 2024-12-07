@@ -1,6 +1,5 @@
 ﻿using ConferenceRoomsApi.Models.ConferenceRoom;
 using ConferenceRoomsApi.Models.Services;
-using ConferenceRoomsApi.Models.Bookings;
 using Microsoft.EntityFrameworkCore;
 using ConferenceRoomsApi.Models;
 
