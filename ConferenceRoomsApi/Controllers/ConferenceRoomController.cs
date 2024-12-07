@@ -1,10 +1,7 @@
 ﻿using ConferenceRoomsApi.ConferenceDbContext;
-using ConferenceRoomsApi.Dto;
 using ConferenceRoomsApi.Interfaces;
-using ConferenceRoomsApi.Models;
 using ConferenceRoomsApi.Models.Bookings;
 using ConferenceRoomsApi.Models.ConferenceRoom;
-using ConferenceRoomsApi.Models.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -56,7 +53,6 @@ namespace ConferenceRoomsApi.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-            // Ищем комнату по ID
             var room = await _context.Rooms
                 .Include(r => r.RoomServices)
                 .FirstOrDefaultAsync(r => r.Id == id);
@@ -66,16 +62,13 @@ namespace ConferenceRoomsApi.Controllers
                 return NotFound(new { Message = "Room not found" });
             }
 
-            // Удаляем связанные записи в таблице RoomServices
             if (room.RoomServices != null && room.RoomServices.Count > 0)
             {
                 _context.RoomServices.RemoveRange(room.RoomServices);
             }
-
-            // Удаляем саму комнату
+ 
             _context.Rooms.Remove(room);
 
-            // Сохраняем изменения в базе данных
             await _context.SaveChangesAsync();
 
             return Ok(new { Message = "Room deleted successfully" });
@@ -94,7 +87,6 @@ namespace ConferenceRoomsApi.Controllers
         {
             try
             {
-                // Вызываем метод бронирования из сервиса
                 var tryBooking = _rooms.BookRoom(
                     roomId: booking.RoomId,
                     duration: booking.Duration,
@@ -102,12 +94,10 @@ namespace ConferenceRoomsApi.Controllers
                     selectedServices: booking.SelectedServices
                 );
 
-                // Возвращаем успешный ответ с данными бронирования
                 return Ok(new { Message = "Room booked successfully", Booking = tryBooking });
             }
             catch (Exception ex)
             {
-                // Возвращаем ошибку в случае, если что-то пошло не так
                 return BadRequest(new { ex.Message });
             }
         }
