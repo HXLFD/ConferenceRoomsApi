@@ -40,15 +40,16 @@ namespace ConferenceRoomsApi.Controllers
 
         [HttpPut("{id}")]
 
-        public async Task<bool> UpdateRoom(int id, [FromBody] Room room)
+        public async Task<IActionResult> UpdateRoom(int id, [FromBody] Room room)
         {
             var existingRoom = await _context.Rooms.FindAsync(id);
-            if (existingRoom == null) return false;
+            if (existingRoom == null) return NotFound("Room with ID {id} not found.");
 
             existingRoom.Name = room.Name;
             existingRoom.Capacity = room.Capacity;
+            existingRoom.BaseRentPerHour = room.BaseRentPerHour;
             await _context.SaveChangesAsync();
-            return true;
+            return Ok(new { Message = "Room updated successfully." });
         }
 
 
