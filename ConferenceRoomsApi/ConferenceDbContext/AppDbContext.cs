@@ -8,29 +8,38 @@ namespace ConferenceRoomsApi.ConferenceDbContext
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+        modelBuilder.HasDefaultSchema("RemoteRooms");
 
-        public DbSet<Room> Rooms { get; set; }
-        public DbSet<Service> Services { get; set; }
-        public DbSet<RoomService> RoomServices { get; set; }
+// Таблица Room
+modelBuilder.Entity<Room>(entity =>
+{
+    entity.ToTable("Room");
+    entity.HasKey(r => r.Id);
+});
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema("Rooms");
+// Таблица Service
+modelBuilder.Entity<Service>(entity =>
+{
+    entity.ToTable("Service");
+    entity.HasKey(s => s.Id);
+});
 
-            modelBuilder.Entity<Room>(entity =>
-            {
-                entity.ToTable("Room");
-            });
+// Таблица RoomService
+modelBuilder.Entity<RoomService>(entity =>
+{
+    entity.ToTable("RoomService");
+    entity.HasKey(rs => new { rs.RoomId, rs.ServiceId });
 
-            modelBuilder.Entity<Service>()
-           .HasMany(s => s.RoomServices)
-           .WithOne(rs => rs.Service)
-           .HasForeignKey(rs => rs.ServiceId);
+    entity.HasOne(rs => rs.Room)
+        .WithMany(r => r.RoomServices)
+        .HasForeignKey(rs => rs.RoomId)
+        .OnDelete(DeleteBehavior.Cascade);
 
-
-            modelBuilder.Entity<RoomService>()
-           .HasKey(rs => new { rs.RoomId, rs.ServiceId });
+    entity.HasOne(rs => rs.Service)
+        .WithMany(s => s.RoomServices)
+        .HasForeignKey(rs => rs.ServiceId)
+        .OnDelete(DeleteBehavior.Cascade);
+});
             
         }
     }
