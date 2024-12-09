@@ -6,7 +6,7 @@ using ConferenceRoomsApi.Models;
 
 namespace ConferenceRoomsApi.ConferenceDbContext
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Service> Services { get; set; }
